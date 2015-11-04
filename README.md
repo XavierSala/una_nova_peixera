@@ -29,4 +29,4 @@ Activitat
 
     * Proveu el que passa posant 25 peixos de cada sexe
 
-    ![peixos i sexe](README/exemple.png "funcionament")
+![pantalla](README/exemple.png "funcionament")
