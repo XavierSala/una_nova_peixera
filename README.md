@@ -28,3 +28,5 @@ Activitat
 1. Desenvolupeu un programa fent servir la llibreria gràfica ACM que simuli el comportament dels peixos en la peixera fins que arribi a un punt en que no pugui passar res: no queden peixos, només en queda un, …
 
     * Proveu el que passa posant 25 peixos de cada sexe
+
+![pantalla](README/exemle.png "funcionament")
