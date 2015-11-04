@@ -18,13 +18,29 @@ import net.xaviersala.peixera.peixos.Peix;
 public class PantallaJoc implements Screen {
 
   private static final int NUMERODEPEIXOSACREAR = 25;
-  // private static final int QUANTITATSEXES = 2;
+  private static final int QUANTITATSEXES = 2;
   private static final String[] IMATGESDEPEIXOS = { "peix1", "peixa1" };
+  /*
+   * Referència al objecte principal.
+   */
   private PeixeraGame joc;
   OrthographicCamera camera;
+  /**
+   * Coordenades de la pantalla. Es fa servir bàsicament per comprovar si
+   * algun dels objectes se n'ha anat de la pantalla.
+   */
   private Rectangle pantalla;
+  /**
+   * Objecte per mantenir les imatges i evitar haver de tenir-ne moltes.
+   */
   ImageManager imatges;
+  /**
+   * Array que té tots els peixos de la peixera.
+   */
   Array<Peix> peixos;
+  /**
+   * Llista dels nous peixos (per evitar que els matin els seus pares).
+   */
   Array<Peix> bebes;
 
 
@@ -48,12 +64,11 @@ public class PantallaJoc implements Screen {
     bebes = new Array<Peix>();
 
     // Crear els peixos dels dos sexes
-//    for(int j=0; j<QUANTITATSEXES; j++) {
-//      crearPeixos(j, NUMERODEPEIXOSACREAR);
-//    }
+    for(int j=0; j < QUANTITATSEXES; j++) {
+      crearPeixos(j, NUMERODEPEIXOSACREAR);
+    }
 
-    crearPeixos(0, NUMERODEPEIXOSACREAR);
-    crearPeixos(1, NUMERODEPEIXOSACREAR/2);
+
   }
   /**
    * Crea una quantitat de peixos i la posa en l'array de peixos.
@@ -108,9 +123,16 @@ public class PantallaJoc implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     joc.batch.begin();
+    // Pinta els peixos
     for (Peix peix: peixos) {
       peix.pinta(joc.batch);
     }
+
+    // Pinta els bebes
+    for(Peix bebe: bebes) {
+      bebe.pinta(joc.batch);
+    }
+
     joc.batch.end();
 
     int i = 0;
@@ -120,7 +142,11 @@ public class PantallaJoc implements Screen {
       peix.mou();
 
       if (peix.esMort() ) {
-        // iter.remove();
+        // Els morts no els mato inmediatament
+        // per fer un efecte de desaparició
+        // if (peix.isDesaparegut()) {
+        //  iter.remove();
+        // }
       } else {
       // Encara està dins de la pantalla?
           tornarALaPantalla(peix);
