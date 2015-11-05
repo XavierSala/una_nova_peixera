@@ -112,7 +112,7 @@ public class PantallaJoc implements Screen {
 
   @Override
   public void show() {
-    // TODO Auto-generated method stub
+
 
   }
 
@@ -121,6 +121,9 @@ public class PantallaJoc implements Screen {
 
     Gdx.gl.glClearColor(0f, 0.73f, 0.83f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    camera.update();
+    joc.batch.setProjectionMatrix(camera.combined);
 
     joc.batch.begin();
     // Pinta els peixos

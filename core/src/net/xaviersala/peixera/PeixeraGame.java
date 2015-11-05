@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import net.xaviersala.peixera.pantalles.PantallaMenu;
 import net.xaviersala.peixera.pantalles.PantallaSplash;
 
 
