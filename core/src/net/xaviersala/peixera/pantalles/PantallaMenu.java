@@ -4,47 +4,90 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import net.xaviersala.peixera.PeixeraGame;
 
 
-public class PantallaMenu implements Screen {
+public class PantallaMenu extends Stage implements Screen {
 
   final PeixeraGame joc;
-  OrthographicCamera camera;
+  private Texture fons;
+  private Texture start;
+
 
   public PantallaMenu(PeixeraGame game) {
+    super(new StretchViewport(PeixeraGame.AMPLEPANTALLA, PeixeraGame.ALTPANTALLA, new OrthographicCamera()));
     joc = game;
-    camera = new OrthographicCamera();
-    camera.setToOrtho(false, PeixeraGame.AMPLEPANTALLA, PeixeraGame.ALTPANTALLA);
+
+
+    fons = new Texture( Gdx.files.internal("menu.png") );
+    start = new Texture(Gdx.files.internal("start.png"));
+    // Carregar el joc
+
+
+    carregaJoc();
+  }
+
+  private void carregaJoc() {
+    Image bg = new Image(fons);
+    addActor(bg);
+
+    // És una mica recargolat però es crea un botó d'aquesta forma
+    ImageButton btnStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(start)));
+
+    btnStart.setPosition(3 * getWidth() / 4, 120.f, Align.center);
+    addActor(btnStart);
+
+    // Afegir un Listener al botó per canviar de pantalla....
+    btnStart.addListener(
+        new InputListener() {
+          @Override
+          public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            joc.setScreen(new PantallaJoc(joc));
+            return false;
+          }
+        }
+    );
+
+//    btnExit.addListener(
+//        new InputListener() {
+//          @Override
+//          public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+//            Gdx.app.exit();
+//            return false;
+//          }
+//        });
+
   }
 
   @Override
   public void show() {
-    // TODO Auto-generated method stub
-
+    Gdx.input.setInputProcessor(this);
   }
+
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(0, 0, 0.2f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    camera.update();
-    joc.batch.setProjectionMatrix(camera.combined);
 
-    joc.batch.begin();
-    joc.font.draw(joc.batch, "El joc de la peixera", 100, 150);
-    joc.font.draw(joc.batch, "clica per començar!", 100, 100);
-    joc.batch.end();
+    super.act(delta);
+    super.draw();
 
-    if (Gdx.input.isTouched()) {
-        joc.setScreen(new PantallaJoc(joc));
-        dispose();
-    }
   }
   @Override
   public void resize(int width, int height) {
-    // TODO Auto-generated method stub
+    getViewport().update(width, height);
 
   }
   @Override
@@ -64,7 +107,9 @@ public class PantallaMenu implements Screen {
   }
   @Override
   public void dispose() {
-    // TODO Auto-generated method stub
+    super.dispose();
+    fons.dispose();
+    start.dispose();
 
   }
 

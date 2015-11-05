@@ -13,7 +13,6 @@ public class PantallaSplash implements Screen {
 
   PeixeraGame joc;
   private boolean timerIsOn;
-  // private SpriteBatch spriteBatch;
   private Texture splsh;
 
   public PantallaSplash(PeixeraGame peixeraGame) {
@@ -22,7 +21,6 @@ public class PantallaSplash implements Screen {
 
   @Override
   public void show() {
-    // spriteBatch = new SpriteBatch();
     splsh = new Texture(Gdx.files.internal("splash.png"));
 
   }
@@ -56,31 +54,26 @@ public class PantallaSplash implements Screen {
 
   @Override
   public void resize(int width, int height) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void pause() {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void resume() {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void hide() {
-    // TODO Auto-generated method stub
-
   }
 
   @Override
   public void dispose() {
-    // spriteBatch.dispose();
+    splsh.dispose();
 
   }
 
