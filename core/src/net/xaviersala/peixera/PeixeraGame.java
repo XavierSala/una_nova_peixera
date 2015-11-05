@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.xaviersala.peixera.pantalles.PantallaMenu;
+import net.xaviersala.peixera.pantalles.PantallaSplash;
 
 
 public class PeixeraGame extends Game {
@@ -20,7 +21,7 @@ public class PeixeraGame extends Game {
       batch = new SpriteBatch();
       //Use LibGDX's default Arial font.
       font = new BitmapFont();
-      this.setScreen(new PantallaMenu(this));
+      this.setScreen(new PantallaSplash(this));
 
     }
 
