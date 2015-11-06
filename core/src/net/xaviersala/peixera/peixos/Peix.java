@@ -1,5 +1,6 @@
 package net.xaviersala.peixera.peixos;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,12 +13,15 @@ public class Peix {
   // He canviat la textura per un Sprite perquè són
   // més fàcils de girar, etc..
   Sprite imatge;
+  Sound soDeMorir;
+
   int angle;
   int velocitat;
   float alpha;
   boolean quarentena;
   private int sexe;
   private long lastSexTime;
+
 
 
   public Peix(Texture image, int sex, float x, float y) {
@@ -54,6 +58,10 @@ public class Peix {
     imatge.draw(batch, alpha);
   }
 
+  public void setSound(Sound so) {
+    soDeMorir = so;
+  }
+
   public void mou() {
 //    imatge.setPosition(imatge.getX() - MathUtils.cosDeg(angle),
 //                       imatge.getY() - MathUtils.sinDeg(angle));
@@ -81,6 +89,9 @@ public class Peix {
 
   public void mort() {
     velocitat = 0;
+    if (soDeMorir != null) {
+      soDeMorir.play();
+    }
   }
 
   public boolean esMort() {

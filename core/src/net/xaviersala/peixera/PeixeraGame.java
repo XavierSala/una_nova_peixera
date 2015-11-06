@@ -1,6 +1,8 @@
 package net.xaviersala.peixera;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -14,12 +16,16 @@ public class PeixeraGame extends Game {
 
     public SpriteBatch batch;
     public BitmapFont font;
+    public Music mar;
 
     @Override
     public void create() {
       batch = new SpriteBatch();
       //Use LibGDX's default Arial font.
       font = new BitmapFont();
+      mar = Gdx.audio.newMusic(Gdx.files.internal("mar.mp3"));
+      mar.setLooping(true);
+      mar.play();
       this.setScreen(new PantallaSplash(this));
 
     }

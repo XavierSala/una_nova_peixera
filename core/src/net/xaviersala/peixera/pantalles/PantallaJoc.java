@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,6 +44,9 @@ public class PantallaJoc implements Screen {
    */
   Array<Peix> bebes;
 
+  Sound soDeLluita;
+
+
 
   public PantallaJoc(PeixeraGame joc) {
     this.joc = joc;
@@ -54,6 +58,7 @@ public class PantallaJoc implements Screen {
 
     // Gestor per reutilitzar les imatges
     imatges = new ImageManager();
+    soDeLluita = Gdx.audio.newSound(Gdx.files.internal("slap.wav"));
 
     // Carregar les imatges
     for(String imatgeDePeix: IMATGESDEPEIXOS) {
@@ -89,11 +94,9 @@ public class PantallaJoc implements Screen {
    * @return Peix creat
    */
   private Peix crearPeixEnPosicioAleatoria(int numeroDePeix) {
-    Texture imatgePeix = imatges.obtenirImatge(IMATGESDEPEIXOS[numeroDePeix]);
-     return new Peix(imatgePeix, numeroDePeix % 2,
-         MathUtils.random(0, pantalla.getWidth() - imatgePeix.getWidth()),
-         MathUtils.random(0, pantalla.getHeight()-imatgePeix.getHeight())
-     );
+     return crearPeixA(numeroDePeix,
+         MathUtils.random(0, pantalla.getWidth()),
+         MathUtils.random(0, pantalla.getHeight()));
   }
 
 
@@ -107,12 +110,14 @@ public class PantallaJoc implements Screen {
    */
   private Peix crearPeixA(int numeroDePeix, float x, float y) {
     Texture imatgePeix = imatges.obtenirImatge(IMATGESDEPEIXOS[numeroDePeix]);
-    return new Peix(imatgePeix, numeroDePeix %2, x, y);
+    Peix peixet = new Peix(imatgePeix, numeroDePeix %2, x, y);
+    peixet.setSound(soDeLluita);
+    return peixet;
   }
 
   @Override
   public void show() {
-
+    joc.mar.play();
 
   }
 
@@ -122,10 +127,14 @@ public class PantallaJoc implements Screen {
     Gdx.gl.glClearColor(0f, 0.73f, 0.83f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+    mourePeixos();
+    comprovaSiPodenEntrarElsBebes();
+
     camera.update();
     joc.batch.setProjectionMatrix(camera.combined);
 
     joc.batch.begin();
+
     // Pinta els peixos
     for (Peix peix: peixos) {
       peix.pinta(joc.batch);
@@ -138,11 +147,19 @@ public class PantallaJoc implements Screen {
 
     joc.batch.end();
 
+
+
+  }
+  /**
+   * Mou tots els peixos de la llista de peixos i comprova si
+   * el seu moviment impacta amb un altre de manera que s'ha
+   * de crear un nou peix o eliminar-lo
+   */
+  private void mourePeixos() {
     int i = 0;
     Iterator<Peix> iter = peixos.iterator();
     while(iter.hasNext()) {
       Peix peix = iter.next();
-      peix.mou();
 
       if (peix.esMort() ) {
         // Els morts no els mato inmediatament
@@ -151,7 +168,8 @@ public class PantallaJoc implements Screen {
         //  iter.remove();
         // }
       } else {
-      // Encara està dins de la pantalla?
+        peix.mou();
+          // Encara està dins de la pantalla?
           tornarALaPantalla(peix);
           // Mirar si xoca
           Peix x = comprovaSiXoca(peix, i);
@@ -171,7 +189,14 @@ public class PantallaJoc implements Screen {
       }
       i++;
     }
-    // Mira si els bebes poden entrar
+  }
+
+  /**
+   * Comprova si els Bebes ja no xoquen amb els seus pares i per
+   * tant es poden considerar peixos de ple dret (i poden atacar i
+   * reproduir-se).
+   */
+  private void comprovaSiPodenEntrarElsBebes() {
     Iterator<Peix> iterBebe = bebes.iterator();
     while(iterBebe.hasNext()) {
        Peix bebe = iterBebe.next();
@@ -181,9 +206,7 @@ public class PantallaJoc implements Screen {
           iterBebe.remove();
        }
     }
-
   }
-
 
   /**
    * Crea un peix aleatòriament.
@@ -229,31 +252,32 @@ public class PantallaJoc implements Screen {
 
   @Override
   public void resize(int width, int height) {
-    // TODO Auto-generated method stub
+
 
   }
 
   @Override
   public void pause() {
-    // TODO Auto-generated method stub
+
 
   }
 
   @Override
   public void resume() {
-    // TODO Auto-generated method stub
+
 
   }
 
   @Override
   public void hide() {
-    // TODO Auto-generated method stub
+
 
   }
 
   @Override
   public void dispose() {
     imatges.destrueix();
+    soDeLluita.dispose();
   }
 
 }
