@@ -15,12 +15,23 @@ import com.badlogic.gdx.utils.Array;
 import net.xaviersala.peixera.ImageManager;
 import net.xaviersala.peixera.PeixeraGame;
 import net.xaviersala.peixera.peixos.Peix;
+import net.xaviersala.peixera.peixos.PeixVerd;
+import net.xaviersala.peixera.peixos.Tauro;
+import sun.security.jca.GetInstance.Instance;
 
 public class PantallaJoc implements Screen {
 
-  private static final int NUMERODEPEIXOSACREAR = 25;
+
+  private static final int NUMERODETAURONS = 2;
+
+  private static final int NUMERODETAURONSACREAR = 1;
+  private static final int NUMERODEPEIXOSVERDSACREAR = 25;
+
   private static final int QUANTITATSEXES = 2;
-  private static final String[] IMATGESDEPEIXOS = { "peix1", "peixa1" };
+
+  private static final String[] IMATGESDEPEIXOS = { "peix1", "peixa1", "tauro1", "taurona1" };
+  private static final int PRIMERTAURO = 2;
+  private static final int NUMEROIMATGESPEIXOS = 2;
   /*
    * Referència al objecte principal.
    */
@@ -43,6 +54,9 @@ public class PantallaJoc implements Screen {
    * Llista dels nous peixos (per evitar que els matin els seus pares).
    */
   Array<Peix> bebes;
+  /**
+   * Llista de taurons
+   */
 
   Sound soDeLluita;
 
@@ -68,11 +82,16 @@ public class PantallaJoc implements Screen {
     peixos = new Array<Peix>();
     bebes = new Array<Peix>();
 
+
+
     // Crear els peixos dels dos sexes
     for(int j=0; j < QUANTITATSEXES; j++) {
-      crearPeixos(j, NUMERODEPEIXOSACREAR);
+      crearPeixos(tipusPeix.PEIXVERD, j, NUMERODEPEIXOSVERDSACREAR);
     }
 
+
+    crearPeixos(tipusPeix.TAURO, 2, NUMERODETAURONSACREAR);
+    crearPeixos(tipusPeix.TAURO, 3, NUMERODETAURONSACREAR);
 
   }
   /**
@@ -80,11 +99,13 @@ public class PantallaJoc implements Screen {
    * @param imatgeDelPeix Imatge que també diu de quin sexe són els peixos (parell: mascle, senar: femella)?
    * @param quants Quants peixos es volen crear
    */
-  private void crearPeixos(int imatgeDelPeix, int quants) {
+  private void crearPeixos(tipusPeix tipus, int imatgeDelPeix, int quants ) {
     for(int i=0; i < quants; i++) {
-       peixos.add(crearPeixEnPosicioAleatoria(imatgeDelPeix));
+       peixos.add(crearPeixEnPosicioAleatoria(tipus, imatgeDelPeix));
     }
   }
+
+
 
   /**
    * Crea un peix amb el sexe definit per l'índex de la imatge en una posició
@@ -93,8 +114,8 @@ public class PantallaJoc implements Screen {
    * @param numeroDePeix Índex de la imatge del peix
    * @return Peix creat
    */
-  private Peix crearPeixEnPosicioAleatoria(int numeroDePeix) {
-     return crearPeixA(numeroDePeix,
+  private Peix crearPeixEnPosicioAleatoria(tipusPeix tipus, int numeroDePeix) {
+     return crearPeixA(tipus, numeroDePeix,
          MathUtils.random(0, pantalla.getWidth()),
          MathUtils.random(0, pantalla.getHeight()));
   }
@@ -108,12 +129,23 @@ public class PantallaJoc implements Screen {
    * @param y posicio y
    * @return Peix creat
    */
-  private Peix crearPeixA(int numeroDePeix, float x, float y) {
+  private Peix crearPeixA(tipusPeix tipus, int numeroDePeix, float x, float y) {
+
     Texture imatgePeix = imatges.obtenirImatge(IMATGESDEPEIXOS[numeroDePeix]);
-    Peix peixet = new Peix(imatgePeix, numeroDePeix %2, x, y);
-    peixet.setSound(soDeLluita);
+    Peix peixet = null;
+
+    switch (tipus) {
+      case PEIXVERD:
+        peixet = new PeixVerd(imatgePeix, numeroDePeix %2, x, y);
+        peixet.setSound(soDeLluita);
+        break;
+      case TAURO:
+        peixet = new Tauro(imatgePeix, numeroDePeix %2, x, y);
+        break;
+    }
     return peixet;
   }
+
 
   @Override
   public void show() {
@@ -174,23 +206,54 @@ public class PantallaJoc implements Screen {
           // Mirar si xoca
           Peix x = comprovaSiXoca(peix, i);
           if (x != null) {
-            if (peix.getSexe() == x.getSexe()) {
-              peix.mort();
+
+            if (peix.elMates(x)) {
               x.mort();
-            } else {
-              // S'estimen
+            }
+
+            if (x.elMates(peix)) {
+              peix.mort();
+            }
+            // Si no han mort és que poden criar
+            if (!peix.esMort() && !x.esMort()) {
               if (!peix.isQuarentena() && !x.isQuarentena()) {
-                creaUnNouPeix(peix.getPosicio());
+//              creaUnNouPeix(peix.getPosicio());
+//              peix.quarentena();
+//              x.quarentena();
+                if (peix instanceof PeixVerd) {
+                  creaUnNouPeix(peix.getPosicio());
+                } else {
+                  crearUnNouTauro(peix.getPosicio());
+                }
                 peix.quarentena();
                 x.quarentena();
               }
             }
+
+//            if (peix.getSexe() == x.getSexe()) {
+//              // Són del mateix sexe, ... a matar!
+//              if (peix.elMates(x)) {
+//                x.mort();
+//              }
+//              if (x.elMates(peix))
+//                peix.mort();
+//              }
+//            } else {
+//
+//
+//
+//              // S'estimen
+//              if (!peix.isQuarentena() && !x.isQuarentena()) {
+//                creaUnNouPeix(peix.getPosicio());
+//                peix.quarentena();
+//                x.quarentena();
+//              }
+//            }
           }
       }
       i++;
     }
   }
-
   /**
    * Comprova si els Bebes ja no xoquen amb els seus pares i per
    * tant es poden considerar peixos de ple dret (i poden atacar i
@@ -213,9 +276,13 @@ public class PantallaJoc implements Screen {
    * @param rectangle
    */
   private void creaUnNouPeix(Rectangle rectangle) {
-     int tria = MathUtils.random(0, IMATGESDEPEIXOS.length - 1);
-     bebes.add(crearPeixA(tria, rectangle.x, rectangle.y));
+     int tria = MathUtils.random(0, NUMEROIMATGESPEIXOS - 2);
+     bebes.add(crearPeixA(tipusPeix.PEIXVERD, tria, rectangle.x, rectangle.y));
+  }
 
+  private void crearUnNouTauro(Rectangle rectangle) {
+    int tria = PRIMERTAURO + MathUtils.random(0, NUMERODETAURONS-1);
+    bebes.add(crearPeixA(tipusPeix.TAURO, tria, rectangle.x, rectangle.y));
   }
 
   private Peix comprovaSiXoca(Peix peix, int i) {

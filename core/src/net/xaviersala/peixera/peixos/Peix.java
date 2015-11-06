@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class Peix {
+public abstract class Peix {
   private static final int VELOCITAT = 1;
   // He canviat la textura per un Sprite perquè són
   // més fàcils de girar, etc..
@@ -112,4 +112,5 @@ public class Peix {
     return (alpha == 0f);
   }
 
+  public abstract boolean elMates(Peix p);
 }
