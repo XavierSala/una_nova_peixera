@@ -1,8 +1,7 @@
-Una nova peixera
+La peixera contrataca
 =========================
 En una peixera hi ha una quantitat de peixos que es mouen seguint sempre la mateixa direcció.
 
-![peixera](README/peixera.png)
 > Com que la peixera (en realitat) és esfèrica no els cal canviar de direcció per donar voltes i per això no ho fan mai.
 
 
@@ -25,8 +24,14 @@ Són tant fèrtils que el resultat de la unió sempre és un peix nou (el 50% ma
 
 Activitat
 -------------------
-1. Desenvolupeu un programa fent servir la llibreria gràfica ACM que simuli el comportament dels peixos en la peixera fins que arribi a un punt en que no pugui passar res: no queden peixos, només en queda un, …
+1. L’amo de la peixera troba que és avorrida i per això ha decidit introduir-hi taurons.
 
-    * Proveu el que passa posant 25 peixos de cada sexe
+![Taurons i 'taurones'](README/peixos5.png "sexe dels taurons")
 
-![pantalla](README/exemple.png "funcionament")
+* Els taurons d’aquesta espècie es comporten igual que els peixos de la peixera. De manera que:
+    * Es mouen sempre en línia recta
+    * Es barallen amb els del seu sexe i es reprodueixen amb els de l’altre sexe
+* Però tenen tanta gana que es mengen tots els peixos que es troben (no importa de quin sexe siguin)
+
+![Taurons i gana](README/peixos6.png "La gana dels taurons")
+
