@@ -30,3 +30,6 @@ Activitat
     * Proveu el que passa posant 25 peixos de cada sexe
 
 ![pantalla](README/exemple.png "funcionament")
+
+Un vídeo del funcionament en [Android](https://youtu.be/rVyBgTKfT0c) 
+![android](https://i.ytimg.com/vi/rVyBgTKfT0c/1.jpg?time=1447083239982 "android")
